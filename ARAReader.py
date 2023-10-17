@@ -45,6 +45,9 @@ class Reader:
     self.status_entry =-1; 
 
     self.current_entry = 0; 
+
+  def numberEntries(self):
+    return self.head_tree.GetEntries()
     
   def setEntry(self,i): 
     if (i < 0 or i >= self.head_tree.GetEntries()):
