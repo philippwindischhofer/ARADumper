@@ -15,7 +15,7 @@ def dump_runs(indir, outdir):
 
     print(available_runs)
         
-    # evt = Reader(run = 999, base_dir = indir)
+    evt = Reader(run = 999, base_dir = indir)
     # evt.header().Dump()
         
     # print("done")    
