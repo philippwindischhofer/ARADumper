@@ -8,7 +8,7 @@ def get_available_runs(dirpath):
     return run_numbers
 
 def dump_metadata(indir, outpath):
-    available_runs = get_available_runs(indir)[0:100]
+    available_runs = get_available_runs(indir)
     number_runs = len(available_runs)
 
     metadata = {"run": [], "readout_time": []}
