@@ -11,7 +11,7 @@ def write_job_script(submitdir, outdir, runs):
     #!/bin/bash
     
     source {rootdir}/setup.sh
-    python3 {rootdir}/skim_runs.py --outdir {outdir} --runs {runs}
+    python3 {rootdir}/correlate_runs.py --outdir {outdir} --runs {runs}
     """
 
     job_name = str(uuid.uuid4())
@@ -24,7 +24,7 @@ def write_job_script(submitdir, outdir, runs):
 
     return job_name, scriptpath
 
-def run_skimming_campaign(outdir, indir, runlist_path, runs_per_job, dryrun):
+def run_correlation_campaign(outdir, indir, runlist_path, runs_per_job, dryrun):
 
     runs_to_process = list(pd.read_csv(runlist_path)["run"])
     print(f"Have {len(runs_to_process)} runs to process")
@@ -48,6 +48,6 @@ if __name__ == "__main__":
     parser.add_argument("--dryrun", action = "store_true", default = False, dest = "dryrun")
     args = vars(parser.parse_args())
 
-    run_skimming_campaign(**args)
+    run_correlation_campaign(**args)
 
     
