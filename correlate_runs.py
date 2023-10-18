@@ -49,9 +49,9 @@ def correlate_and_average(df, channel_a, channel_b, preprocessor = lambda sig: s
 
     number_correlators = len(correlators)
     correlator_mean = np.mean(correlators, axis = 0)
-    correlator_std = np.std(correlators, axis = 0) /  np.sqrt(number_correlators)
+    correlator_var = np.var(correlators, axis = 0)
 
-    return number_correlators, correlator_mean, correlator_std
+    return number_correlators, correlator_mean, correlator_var
 
 def ensure_zero_mean(sig):
     return sig - np.mean(sig)
@@ -72,10 +72,10 @@ def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5,
             correlators[pairing] = {}
             outdict = correlators[pairing]
             
-            number_correlators, correlator_mean, correlator_std = correlate_and_average(run_df, channel_a, channel_b, preprocessor = ensure_zero_mean)
+            number_correlators, correlator_mean, correlator_var = correlate_and_average(run_df, channel_a, channel_b, preprocessor = ensure_zero_mean)
             outdict["num_corr"] = number_correlators
             outdict["mean"] = correlator_mean
-            outdict["std"] = correlator_mean
+            outdict["var"] = correlator_var
         
         outpath = os.path.join(outdir, f"run_{cur_run}.pkl")
         with open(outpath, 'wb') as outfile:
