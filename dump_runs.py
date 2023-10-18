@@ -30,7 +30,7 @@ def extract_events_from_run(base_dir, run, channels = [3], selector = lambda hea
     run_df = pd.concat(event_dfs, ignore_index = True)
     return run_df
     
-def dump_runs(indir, outdir, runs_to_process):
+def dump_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -38,7 +38,7 @@ def dump_runs(indir, outdir, runs_to_process):
     keep_forced_trigger = lambda header: header.trigger_type == 1
 
     for cur_run in runs_to_process:
-        run_df = extract_events_from_run(indir, run = cur_run, channels = [0, 1, 2, 3, 4, 5, 6, 7], selector = keep_forced_trigger)
+        run_df = extract_events_from_run(indir, run = cur_run, channels = channels, selector = keep_forced_trigger)
         outpath = os.path.join(outdir, f"run_{cur_run}.pkl")
         run_df.to_pickle(outpath)
 
