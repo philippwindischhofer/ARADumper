@@ -2,7 +2,7 @@ import sys, os, glob, argparse
 import pandas as pd
 from ARAReader import Reader
 
-def extract_events_from_run(base_dir, run, channels = [3], selector = lambda header: True):
+def extract_events_from_run(base_dir, run, channels, selector = lambda header: True):
     reader = Reader(run, base_dir)
 
     event_dfs = []
