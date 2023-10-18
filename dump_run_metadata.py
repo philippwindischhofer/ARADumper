@@ -17,15 +17,18 @@ def dump_metadata(indir, outpath):
 
         print(f"Peeking inside run {cur_run} ({cur_ind} / {number_runs})")
 
-        # use the first event to assign a time to the entire run
-        reader = Reader(cur_run, indir)
-        reader.setEntry(0)
+        try:
+            # use the first event to assign a time to the entire run
+            reader = Reader(cur_run, indir)
+            reader.setEntry(0)
         
-        header = reader.header()
-        readout_time = datetime.datetime.fromtimestamp(header.getReadoutTimeFloat(), datetime.timezone.utc)
+            header = reader.header()
+            readout_time = datetime.datetime.fromtimestamp(header.getReadoutTimeFloat(), datetime.timezone.utc)
 
-        metadata["run"].append(cur_run)
-        metadata["readout_time"].append(readout_time.isoformat())
+            metadata["run"].append(cur_run)
+            metadata["readout_time"].append(readout_time.isoformat())
+        except:
+            print("Run probably faulty; ignoring!")
         
     meta_df = pd.DataFrame(metadata)
     meta_df = meta_df.sort_values(by = "run", ascending = True)
