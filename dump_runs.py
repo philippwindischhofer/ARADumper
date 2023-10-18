@@ -2,11 +2,6 @@ import sys, os, glob, argparse
 import pandas as pd
 from ARAReader import Reader
 
-def get_available_runs(dirpath):
-    all_run_dirs = list(filter(lambda folder: "run" in folder, os.listdir(dirpath)))
-    run_numbers = list(map(lambda folder: int(folder.replace("run", "")), all_run_dirs))
-    return run_numbers
-
 def extract_events_from_run(base_dir, run, channels = [3], selector = lambda header: True):
     reader = Reader(run, base_dir)
 
@@ -35,14 +30,11 @@ def extract_events_from_run(base_dir, run, channels = [3], selector = lambda hea
     run_df = pd.concat(event_dfs, ignore_index = True)
     return run_df
     
-def dump_runs(indir, outdir):
+def dump_runs(indir, outdir, runs_to_process):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    # available_runs = get_available_runs(indir)
-
-    runs_to_process = [12105]
     keep_forced_trigger = lambda header: header.trigger_type == 1
 
     for cur_run in runs_to_process:
@@ -55,6 +47,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--indir", action = "store", dest = "indir", default = "/project2/kicp/cozzyd/nuphase-root-data/")
     parser.add_argument("--outdir", action = "store", dest = "outdir")
+    parser.add_argument("--runs", action = "store", nargs = "+", dest = "runs_to_process", type = int)
     args = vars(parser.parse_args())
 
     dump_runs(**args)
