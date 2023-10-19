@@ -11,7 +11,7 @@ def dump_metadata(indir, outpath):
     available_runs = get_available_runs(indir)
     number_runs = len(available_runs)
 
-    metadata = {"run": [], "readout_time": []}
+    metadata = {"run": [], "readout_time": [], "buffer_length": []}
     
     for cur_ind, cur_run in enumerate(available_runs):
 
@@ -24,9 +24,10 @@ def dump_metadata(indir, outpath):
         
             header = reader.header()
             readout_time = datetime.datetime.fromtimestamp(header.getReadoutTimeFloat(), datetime.timezone.utc)
-
+            
             metadata["run"].append(cur_run)
             metadata["readout_time"].append(readout_time.isoformat())
+            metadata["buffer_length"].append(header.buffer_length)
         except:
             print("Run probably faulty; ignoring!")
         
