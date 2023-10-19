@@ -9,7 +9,6 @@ def downselect_runlist(inpath, veto_path, outpath, year_to_select, buflen_to_sel
                             axis = 1)
     runs_selected = set(df_all[selector]["run"])
     runs_selected = list(runs_selected.difference(runs_vetoed))
-    print(runs_selected)
     
     df_selected = pd.DataFrame({"run": runs_selected})
     df_selected.to_csv(outpath, index = False)
