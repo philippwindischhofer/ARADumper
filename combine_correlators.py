@@ -21,9 +21,12 @@ def combine_correlators(outpath, inpaths):
                     outdict["mean"] = indict["mean"]
                     outdict["var"] = indict["var"]
                 else:
-                    outdict["num_corr"] += indict["num_corr"]
-                    outdict["mean"] += indict["mean"]
-                    outdict["var"] += indict["var"]
+                    num_accum = outdict["num_corr"]
+                    num_new = indict["num_corr"]
+                    
+                    outdict["mean"] = (num_accum * outdict["mean"] + num_new * indict["mean"]) / (num_accum + num_new)
+                    outdict["var"] = (num_accum * outdict["var"] + num_new * indict["var"]) / (num_accum + num_new)
+                    outdict["num_corr"] += num_new
 
     with open(outpath, 'wb') as outfile:
         pickle.dump(combined_correlators, outfile)
