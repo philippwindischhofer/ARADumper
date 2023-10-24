@@ -29,7 +29,7 @@ if __name__ == "__main__":
     parser.add_argument("--indir", action = "store", dest = "indir", default = "/project2/kicp/cozzyd/nuphase-root-data/")
     parser.add_argument("--outdir", action = "store", dest = "outdir")
     parser.add_argument("--runlist", action = "store", dest = "runlist_path")
-    parser.add_argument("--runs_per_job", action = "store", dest = "runs_per_job", type = int, default = 20)
+    parser.add_argument("--runs_per_job", action = "store", dest = "runs_per_job", type = int, default = 10)
     parser.add_argument("--dryrun", action = "store_true", default = False, dest = "dryrun")
     args = vars(parser.parse_args())
 
