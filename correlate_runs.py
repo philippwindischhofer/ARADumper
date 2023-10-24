@@ -1,6 +1,6 @@
 import os, argparse, itertools, pickle
 import numpy as np
-import ARAUtils
+import ARAUtils, preprocessing
 
 def correlate_and_average(df, channel_a, channel_b, preprocessor = lambda sig: sig, time_branch = "t_ns", entry_branch = "entry"):
 
@@ -24,14 +24,17 @@ def correlate_and_average(df, channel_a, channel_b, preprocessor = lambda sig: s
 
     return number_correlators, correlator_mean, correlator_var
 
-def ensure_zero_mean(sig):
-    return sig - np.mean(sig)
-
 def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
+    def preprocessor(sig):
+        passbands = [(150e6, 350e6), (500e6, 700e6)]        
+        return preprocessing.band_limit(preprocessing.ensure_zero_mean(sig),
+                                        passbands = passbands,
+                                        fs = 1.5e9)
+        
     for cur_run in runs_to_process:
         
         keep_forced_trigger = lambda header: header.trigger_type == 1
@@ -43,7 +46,8 @@ def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5,
             correlators[pairing] = {}
             outdict = correlators[pairing]
             
-            number_correlators, correlator_mean, correlator_var = correlate_and_average(run_df, channel_a, channel_b, preprocessor = ensure_zero_mean)
+            number_correlators, correlator_mean, correlator_var = correlate_and_average(run_df, channel_a, channel_b,
+                                                                                        preprocessor = preprocessor)
             outdict["num_corr"] = number_correlators
             outdict["mean"] = correlator_mean
             outdict["var"] = correlator_var

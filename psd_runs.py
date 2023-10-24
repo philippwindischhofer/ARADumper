@@ -1,6 +1,6 @@
 import argparse, os, pickle
 import numpy as np
-import ARAUtils
+import ARAUtils, preprocessing
 
 def make_psd(df, channel, fs = 1.5e9, preprocessor = lambda sig: sig, time_branch = "t_ns", entry_branch = "entry", one_sided = True):
 
@@ -37,6 +37,12 @@ def psd_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
+    def preprocessor(sig):
+        passbands = [(150e6, 350e6), (500e6, 700e6)]        
+        return preprocessing.band_limit(preprocessing.ensure_zero_mean(sig),
+                                        passbands = passbands,
+                                        fs = 1.5e9)
+        
     for cur_run in runs_to_process:
         
         keep_forced_trigger = lambda header: header.trigger_type == 1
@@ -48,7 +54,8 @@ def psd_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]
             psds[label] = {}
             outdict = psds[label]
 
-            number_waveforms, psd_freqs, psd = make_psd(run_df, channel)
+            number_waveforms, psd_freqs, psd = make_psd(run_df, channel,
+                                                        preprocessor = preprocessor)
             outdict["num_waveforms"] = number_waveforms
             outdict["freqs"] = psd_freqs
             outdict["psd"] = psd
