@@ -24,7 +24,7 @@ def correlate_and_average(df, channel_a, channel_b, preprocessor = lambda sig: s
 
     return number_correlators, correlator_mean, correlator_var
 
-def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]):
+def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
