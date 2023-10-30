@@ -32,7 +32,7 @@ def make_psd(df, channel, fs = 1.5e9, preprocessor = lambda sig: sig, time_branc
 
     return number_waveforms, psd_freqs, psd
 
-def psd_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]):
+def psd_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
