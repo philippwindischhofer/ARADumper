@@ -38,10 +38,7 @@ def psd_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7]
         os.makedirs(outdir)
 
     def preprocessor(sig):
-        passbands = [(150e6, 350e6), (500e6, 700e6)]        
-        return preprocessing.band_limit(preprocessing.ensure_zero_mean(sig),
-                                        passbands = passbands,
-                                        fs = 1.5e9)
+        return preprocessing.ensure_zero_mean(sig)
         
     for cur_run in runs_to_process:
         
