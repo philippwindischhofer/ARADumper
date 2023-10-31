@@ -13,12 +13,11 @@ def downselect_runlist(inpath, veto_path, outpath, year_to_select, buflen_to_sel
         raise RuntimeError("Error: not implemented yet")
     else:
         cutter = lambda row: (datetime.datetime.fromisoformat(row["readout_time"]).year == year_to_select) and (row["buffer_length"] == buflen_to_select)
-    
-    selector = df_all.apply(cutter, axis = 1)
-    runs_selected = set(df_all[selector]["run"])
-    runs_selected = list(runs_selected.difference(runs_vetoed))
-    
-    df_selected = pd.DataFrame({"run": runs_selected})
+
+    def cut_and_veto(row):
+        return cutter(row) and (row["run"] not in runs_vetoed)
+        
+    df_selected = df_all[df_all.apply(cut_and_veto, axis = 1)]
     df_selected = df_selected.sort_values(by = "run", ascending = True)
     df_selected.to_csv(outpath, index = False)
 
