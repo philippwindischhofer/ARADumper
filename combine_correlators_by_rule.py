@@ -43,10 +43,13 @@ def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = T
         os.makedirs(outdir)
     
     df_meta = pd.read_csv(metapath)
-    input_runs = list(sorted([extract_run(path) for path in inpaths]))
-    run_times = [get_run_time(df_meta, run) for run in input_runs]
+    runs_on_disk = set([extract_run(path) for path in inpaths])
+    runs_from_metadata = set(df_meta["run"].to_numpy().flatten())
 
-    partitions = partition_runs(input_runs, run_times, num_days)
+    runs_available = list(runs_on_disk.intersection(runs_from_metadata))    
+    run_times = [get_run_time(df_meta, run) for run in runs_available]
+
+    partitions = partition_runs(runs_available, run_times, num_days)
     partition_times = [get_run_timestamp(df_meta, partition[0]) for partition in partitions]
     partition_index = list(range(len(partition_times)))
 
@@ -76,6 +79,7 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", action = "store", dest = "outdir")
     parser.add_argument("--metadata", action = "store", dest = "metapath")
     parser.add_argument("--num_days", action = "store", type = int, dest = "num_days")
+    parser.add_argument("--dryrun", action = "store_true", default = False, dest = "dryrun")
     args = vars(parser.parse_args())
 
     combine_correlators_by_rule(**args)
