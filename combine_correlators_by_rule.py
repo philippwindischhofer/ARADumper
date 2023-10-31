@@ -38,7 +38,7 @@ def get_runfile(inpaths, run):
             return path
     raise RuntimeError("Internal error")
 
-def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = True):
+def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = True, dryrun = True):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
     
@@ -53,7 +53,8 @@ def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = T
     meta_outpath = os.path.join(outdir, "partitions.csv")
     partition_meta = pd.DataFrame.from_dict({"partition_index": partition_index,
                                              "partition_time": partition_times})
-    partition_meta.to_csv(meta_outpath, index = False)
+    if not dryrun:
+        partition_meta.to_csv(meta_outpath, index = False)
     
     for partition_index, partition_time, runs in zip(partition_index, partition_times, partitions):
         partition_outpath = os.path.join(outdir, f"partition_{partition_index}.pkl")
@@ -64,8 +65,9 @@ def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = T
             print(f"Writing partition {partition_index} to {partition_outpath}")
             print("\n".join(partition_inpaths))
             print("-" * 50)
-        
-        combine_correlators.combine_correlators(partition_outpath, partition_inpaths)
+
+        if not dryrun:
+            combine_correlators.combine_correlators(partition_outpath, partition_inpaths)
 
 if __name__ == "__main__":
 
