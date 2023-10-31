@@ -24,7 +24,8 @@ def correlate_and_average(df, channel_a, channel_b, preprocessor = lambda sig: s
 
     return number_correlators, correlator_mean, correlator_var
 
-def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]):
+def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                   trigger = "forced"):
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -37,8 +38,12 @@ def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5,
         
     for cur_run in runs_to_process:
         
-        keep_forced_trigger = lambda header: header.trigger_type == 1
-        run_df = ARAUtils.extract_events_from_run(indir, run = cur_run, channels = channels, selector = keep_forced_trigger)
+        selectors = {
+            "forced": lambda header: header.trigger_type == 1
+            "calib": lambda header: header.trigger_type == 2 and header.gate_flag
+        }
+        
+        run_df = ARAUtils.extract_events_from_run(indir, run = cur_run, channels = channels, selector = selectors[trigger])
 
         correlators = {}
         for (channel_a, channel_b) in itertools.combinations(channels, 2):
@@ -61,6 +66,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--indir", action = "store", dest = "indir", default = "/project2/kicp/cozzyd/nuphase-root-data/")
     parser.add_argument("--outdir", action = "store", dest = "outdir")
+    parser.add_argument("--trigger", action = "store", dest = "trigger")
     parser.add_argument("--runs", action = "store", nargs = "+", dest = "runs_to_process", type = int)
     args = vars(parser.parse_args())
 
