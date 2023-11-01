@@ -1,7 +1,7 @@
 import os, argparse, uuid, textwrap
 import JobUtils
 
-def write_job_script(submitdir, outdir, runs, trigger):
+def write_job_script(submitdir, outdir, runs, trigger = "forced"):
 
     if not os.path.exists(submitdir):
         os.makedirs(submitdir)
@@ -29,7 +29,6 @@ if __name__ == "__main__":
     parser.add_argument("--indir", action = "store", dest = "indir", default = "/project2/kicp/cozzyd/nuphase-root-data/")
     parser.add_argument("--outdir", action = "store", dest = "outdir")
     parser.add_argument("--runlist", action = "store", dest = "runlist_path")
-    parser.add_argument("--trigger", action = "store", default = "forced", dest = "trigger")
     parser.add_argument("--runs_per_job", action = "store", dest = "runs_per_job", type = int, default = 10)
     parser.add_argument("--dryrun", action = "store_true", default = False, dest = "dryrun")
     args = vars(parser.parse_args())
