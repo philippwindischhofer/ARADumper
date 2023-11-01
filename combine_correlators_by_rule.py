@@ -46,7 +46,7 @@ def combine_correlators_by_rule(outdir, inpaths, metapath, num_days, verbose = T
     runs_on_disk = set([extract_run(path) for path in inpaths])
     runs_from_metadata = set(df_meta["run"].to_numpy().flatten())
 
-    runs_available = list(runs_on_disk.intersection(runs_from_metadata))    
+    runs_available = list(sorted(list(runs_on_disk.intersection(runs_from_metadata))))
     run_times = [get_run_time(df_meta, run) for run in runs_available]
 
     partitions = partition_runs(runs_available, run_times, num_days)
