@@ -39,7 +39,7 @@ def correlate_runs(indir, outdir, runs_to_process, channels = [0, 1, 2, 3, 4, 5,
     for cur_run in runs_to_process:
         
         selectors = {
-            "forced": lambda header: header.trigger_type == 1
+            "forced": lambda header: header.trigger_type == 1,
             "calib": lambda header: header.trigger_type == 2 and header.gate_flag
         }
         
