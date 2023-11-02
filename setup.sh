@@ -7,5 +7,5 @@ source /project/avieregg/software/midway3-setup.sh
 module load cmake
 module load ROOT
 module load python
-module load intel
+module load intel/19.1.1
 export LD_LIBRARY_PATH=$NUPHASE_INSTALL_DIR/lib:$LD_LIBRARY_PATH
